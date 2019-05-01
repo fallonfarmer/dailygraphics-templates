@@ -25,6 +25,8 @@ aria-label="<%- COPY.labels.screenreader %>"
   <% if (COPY.labels.credit) { %><p>Credit: <%= COPY.labels.credit %></p><% } %>
 </div>
 
+<button value="export chart as svg" onclick="exportSvg()" class="export-svg-button">Export SVG</button>
+
 <div id="map-template" style="display: none;">
   <div class="key-wrap">
     <% if (COPY.labels.legend_head) { %>
@@ -116,4 +118,20 @@ aria-label="<%- COPY.labels.screenreader %>"
   window.LABELS = <%= JSON.stringify(COPY.labels) %>;
   window.DATA = <%= JSON.stringify(COPY.data) %>;
   window.STATES = <%= JSON.stringify(COPY.states) %>;
+</script>
+
+<script type="text/javascript">
+  //Function triggered on clicking "Export SVG" button to download SVG file of the chart.
+    function exportSvg(){
+      var svgItself = jQuery(".graphic-wrapper svg");
+      var svgData = svgItself[0].outerHTML;
+      var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+      var svgUrl = URL.createObjectURL(svgBlob);
+      var downloadLink = document.createElement("a");
+      downloadLink.href = svgUrl;
+      downloadLink.download = "chart.svg";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    };
 </script>

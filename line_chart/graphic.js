@@ -159,11 +159,11 @@ var renderLineChart = function(config) {
       })
     )
     .range([
-      COLORS.red3,
-      COLORS.yellow3,
-      COLORS.blue3,
-      COLORS.orange3,
-      COLORS.teal3
+      COLORS.grassmain,
+      COLORS.mangocolumnistsmain,
+      COLORS.jademultimedia3,
+      COLORS.cqyellow,
+      COLORS.rcslatemain
     ]);
 
   // Render the HTML legend.
@@ -187,10 +187,16 @@ var renderLineChart = function(config) {
     .append("div")
     .attr("class", "graphic-wrapper");
 
+  //Add CSS styles inline for the SVG so that they get exported within the SVG file
+  $.get("./graphic.css", function(cssContent){
+    d3.select(".graphic-wrapper svg g").append("defs").append("style").text(cssContent);
+  });
+
   var chartElement = chartWrapper
     .append("svg")
     .attr("width", chartWidth + margins.left + margins.right)
     .attr("height", chartHeight + margins.top + margins.bottom)
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
     .append("g")
     .attr("transform", `translate(${margins.left},${margins.top})`);
 
@@ -227,24 +233,24 @@ var renderLineChart = function(config) {
     .call(yAxis);
 
   // Render grid to chart.
+  // Remove x grid we only want horizontal lines.
+  // var xAxisGrid = function() {
+  //   return xAxis;
+  // };
 
-  var xAxisGrid = function() {
-    return xAxis;
-  };
+  // chartElement
+  //   .append("g")
+  //   .attr("class", "x grid")
+  //   .attr("transform", makeTranslate(0, chartHeight))
+  //   .call(
+  //     xAxisGrid()
+  //       .tickSize(-chartHeight, 0, 0)
+  //       .tickFormat("")
+  //   );
 
   var yAxisGrid = function() {
     return yAxis;
   };
-
-  chartElement
-    .append("g")
-    .attr("class", "x grid")
-    .attr("transform", makeTranslate(0, chartHeight))
-    .call(
-      xAxisGrid()
-        .tickSize(-chartHeight, 0, 0)
-        .tickFormat("")
-    );
 
   chartElement
     .append("g")

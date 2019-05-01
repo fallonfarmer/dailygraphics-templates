@@ -143,7 +143,7 @@ var renderGroupedBarChart = function(config) {
         d => skipLabels.indexOf(d) == -1
       )
     )
-    .range([COLORS.teal3, COLORS.teal5]);
+    .range([COLORS.grassdark, COLORS.grass3]);
   // Render a color legend.
   var legend = containerElement
     .append("ul")
@@ -165,39 +165,45 @@ var renderGroupedBarChart = function(config) {
     .append("div")
     .attr("class", "graphic-wrapper");
 
+  //Add CSS styles inline for the SVG so that they get exported within the SVG file
+  $.get("./graphic.css", function(cssContent){
+    d3.select(".graphic-wrapper svg g").append("defs").append("style").text(cssContent);
+  });
+
   var chartElement = chartWrapper
     .append("svg")
     .attr("width", chartWidth + margins.left + margins.right)
     .attr("height", chartHeight + margins.top + margins.bottom)
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
     .append("g")
     .attr("transform", `translate(${margins.left},${margins.top})`);
 
   // Create D3 axes.
-  var xAxis = d3
-    .axisBottom()
-    .scale(xScale)
-    .ticks(ticksX)
-    .tickFormat(d => d.toFixed(0) + "%");
+  // var xAxis = d3
+  //   .axisBottom()
+  //   .scale(xScale)
+  //   .ticks(ticksX)
+  //   .tickFormat(d => d.toFixed(0) + "%");
 
   // Render axes to chart.
-  chartElement
-    .append("g")
-    .attr("class", "x axis")
-    .attr("transform", makeTranslate(0, chartHeight))
-    .call(xAxis);
+  // chartElement
+  //   .append("g")
+  //   .attr("class", "x axis")
+  //   .attr("transform", makeTranslate(0, chartHeight))
+  //   .call(xAxis);
 
   // Render grid to chart.
-  var xAxisGrid = () => xAxis;
+  // var xAxisGrid = () => xAxis;
 
-  chartElement
-    .append("g")
-    .attr("class", "x grid")
-    .attr("transform", makeTranslate(0, chartHeight))
-    .call(
-      xAxisGrid()
-        .tickSize(-chartHeight, 0, 0)
-        .tickFormat("")
-    );
+  // chartElement
+  //   .append("g")
+  //   .attr("class", "x grid")
+  //   .attr("transform", makeTranslate(0, chartHeight))
+  //   .call(
+  //     xAxisGrid()
+  //       .tickSize(-chartHeight, 0, 0)
+  //       .tickFormat("")
+  //   );
 
   // Render bars to chart.
   var barGroups = chartElement

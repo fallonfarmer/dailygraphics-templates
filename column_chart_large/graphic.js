@@ -5,9 +5,6 @@ var { isMobile } = require("./lib/breakpoints");
 
 // Global vars
 var pymChild = null;
-var skipLabels = ["label", "values", "total"];
-var { COLORS, makeTranslate, classify } = require("./lib/helpers");
-console.clear();
 
 var d3 = {
   ...require("d3-axis/dist/d3-axis.min"),
@@ -15,9 +12,12 @@ var d3 = {
   ...require("d3-selection/dist/d3-selection.min")
 };
 
+var { COLORS, makeTranslate } = require("./lib/helpers");
+
+var fmtComma = s => s.toLocaleString().replace(/\.0+$/, "");
+
 // Initialize the graphic.
 var onWindowLoaded = function() {
-  formatData(window.DATA);
   render();
 
   window.addEventListener("resize", render);
@@ -29,7 +29,6 @@ var onWindowLoaded = function() {
     pymChild.onMessage("on-screen", function(bucket) {
       ANALYTICS.trackEvent("on-screen", bucket);
     });
-
     pymChild.onMessage("scroll-depth", function(data) {
       data = JSON.parse(data);
       ANALYTICS.trackEvent("scroll-depth", data.percent, data.seconds);
@@ -37,42 +36,13 @@ var onWindowLoaded = function() {
   });
 };
 
-// Format graphic data for processing by D3.
-var formatData = function(data) {
-  data.forEach(function(d) {
-    var y0 = 0;
-
-    d.values = [];
-    d.total = 0;
-
-    for (var key in d) {
-      if (skipLabels.indexOf(key) > -1) {
-        continue;
-      }
-
-      var y1 = y0 + d[key];
-      d.total += d[key];
-
-      d.values.push({
-        name: key,
-        y0: y0,
-        y1: y1,
-        val: d[key]
-      });
-
-      y0 = y1;
-    }
-  });
-  return data;
-};
-
 // Render the graphic(s). Called by pym with the container width.
 var render = function(containerWidth) {
-  var container = "#stacked-column-chart";
+  // Render the chart!
+  var container = "#column-chart";
   var element = document.querySelector(container);
   var width = element.offsetWidth;
-  // Render the chart!
-  renderStackedColumnChart({
+  renderColumnChart({
     container,
     width,
     data: DATA
@@ -84,13 +54,14 @@ var render = function(containerWidth) {
   }
 };
 
-// Render a stacked column chart.
-var renderStackedColumnChart = function(config) {
-  // Setup
+// Render a column chart.
+var renderColumnChart = function(config) {
+  // Setup chart container
   var labelColumn = "label";
+  var valueColumn = "amt";
 
-  var aspectWidth = 16;
-  var aspectHeight = 9;
+  var aspectWidth = isMobile.matches ? 4 : 16;
+  var aspectHeight = isMobile.matches ? 3 : 9;
   var valueGap = 6;
 
   var margins = {
@@ -100,13 +71,8 @@ var renderStackedColumnChart = function(config) {
     left: 50
   };
 
-  var ticksY = 5;
+  var ticksY = 4;
   var roundTicksFactor = 50;
-
-  if (isMobile.matches) {
-    aspectWidth = 4;
-    aspectHeight = 3;
-  }
 
   // Calculate actual chart dimensions
   var chartWidth = config.width - margins.left - margins.right;
@@ -118,58 +84,6 @@ var renderStackedColumnChart = function(config) {
   // Clear existing graphic (for redraw)
   var containerElement = d3.select(config.container);
   containerElement.html("");
-
-  var labels = config.data.map(d => d[labelColumn]);
-
-  // Create D3 scale objects.
-  var xScale = d3
-    .scaleBand()
-    .domain(labels)
-    .range([0, chartWidth])
-    .padding(0.3);
-
-  var values = config.data.map(d => d.total);
-  var floors = values.map(
-    v => Math.floor(v / roundTicksFactor) * roundTicksFactor
-  );
-  var ceilings = values.map(
-    v => Math.ceil(v / roundTicksFactor) * roundTicksFactor
-  );
-
-  var min = Math.min(...floors);
-  var max = Math.max(...ceilings);
-
-  if (min > 0) {
-    min = 0;
-  }
-
-  var yScale = d3
-    .scaleLinear()
-    .domain([min, max])
-    .rangeRound([chartHeight, 0]);
-
-  var colorScale = d3
-    .scaleOrdinal()
-    .domain(
-      Object.keys(config.data[0]).filter(k => skipLabels.indexOf(k) == -1)
-    )
-    .range([COLORS.mangocolumnistsmain, COLORS.mangocolumnists2]);
-
-  // Render the legend.
-  var legend = containerElement
-    .append("ul")
-    .attr("class", "key")
-    .selectAll("g")
-    .data(colorScale.domain())
-    .enter()
-    .append("li")
-    .attr("class", function(d, i) {
-      return `key-item key-${i} ${classify(d)}`;
-    });
-
-  legend.append("b").style("background-color", d => colorScale(d));
-
-  legend.append("label").text(d => d);
 
   // Create the root SVG element.
   var chartWrapper = containerElement
@@ -187,20 +101,52 @@ var renderStackedColumnChart = function(config) {
     .attr("height", chartHeight + margins.top + margins.bottom)
     .attr('xmlns', 'http://www.w3.org/2000/svg')
     .append("g")
-    .attr("transform", makeTranslate(margins.left, margins.top));
+    .attr("transform", `translate(${margins.left},${margins.top})`);
+
+  // Create D3 scale objects.
+  var xScale = d3
+    .scaleBand()
+    .range([0, chartWidth])
+    .round(true)
+    .padding(0.3)
+    .domain(
+      config.data.map(d => d[labelColumn])
+    );
+
+  var floors = config.data.map(
+    d => Math.floor(d[valueColumn] / roundTicksFactor) * roundTicksFactor
+  );
+
+  var min = Math.min(...floors);
+
+  if (min > 0) {
+    min = 0;
+  }
+
+  var ceilings = config.data.map(
+    d => Math.ceil(d[valueColumn] / roundTicksFactor) * roundTicksFactor
+  );
+
+  var max = Math.max(...ceilings);
+
+  var yScale = d3
+    .scaleLinear()
+    .domain([min, max])
+    .range([chartHeight, 0]);
 
   // Create D3 axes.
   var xAxis = d3
     .axisBottom()
     .scale(xScale)
-    // .tickSize('0')
-    .tickFormat(d => d);
+    .tickFormat(function(d, i) {
+      return d;
+    });
 
   var yAxis = d3
     .axisLeft()
     .scale(yScale)
     .ticks(ticksY)
-    .tickFormat(d => d);
+    .tickFormat(d => fmtComma(d));
 
   // Render axes to chart.
   chartElement
@@ -214,7 +160,7 @@ var renderStackedColumnChart = function(config) {
     .attr("class", "y axis")
     .call(yAxis);
 
-  // Render grid to chart.
+  //Render grid to chart.
   var yAxisGrid = function() {
     return yAxis;
   };
@@ -229,24 +175,23 @@ var renderStackedColumnChart = function(config) {
     );
 
   // Render bars to chart.
-  var bars = chartElement
-    .selectAll(".bars")
+  chartElement
+    .append("g")
+    .attr("class", "bars")
+    .selectAll("rect")
     .data(config.data)
     .enter()
-    .append("g")
-    .attr("class", "bar")
-    .attr("transform", d => makeTranslate(xScale(d[labelColumn]), 0));
-
-  bars
-    .selectAll("rect")
-    .data(d => d.values)
-    .enter()
     .append("rect")
-    .attr("y", d => d.y1 < d.y0 ? yScale(d.y0) : yScale(d.y1))
+    .attr("x", d => xScale(d[labelColumn]))
+    .attr("y", d => d[valueColumn] < 0 ? yScale(0) : yScale(d[valueColumn]))
     .attr("width", xScale.bandwidth())
-    .attr("height", d => Math.abs(yScale(d.y0) - yScale(d.y1)))
-    .style("fill", d => colorScale(d.name))
-    .attr("class", d => classify(d.name));
+    .attr("height", d => d[valueColumn] < 0
+      ? yScale(d[valueColumn]) - yScale(0)
+      : yScale(0) - yScale(d[valueColumn])
+    )
+    .attr("class", function(d) {
+      return "bar bar-" + d[labelColumn];
+    });
 
   // Render 0 value line.
   if (min < 0) {
@@ -259,33 +204,48 @@ var renderStackedColumnChart = function(config) {
       .attr("y2", yScale(0));
   }
 
-  // Render values to chart.
-//   bars
+  // Render bar values.
+//   chartElement
+//     .append("g")
+//     .attr("class", "value")
 //     .selectAll("text")
-//     .data(function(d) {
-//       return d.values;
-//     })
+//     .data(config.data)
 //     .enter()
 //     .append("text")
-//     .text(d => d.val)
-//     .attr("class", d => classify(d.name))
-//     .attr("x", xScale.bandwidth() / 2)
-//     .attr("y", function(d) {
+//     add label units (prefix - sufix) in the line below and they are all the same.
+//     .text(d => '$' + d[valueColumn].toFixed(0) + ' M')
+//     .attr("x", d => xScale(d[labelColumn]) + xScale.bandwidth() / 2)
+//     .attr("y", d => yScale(d[valueColumn]))
+//     .attr("dy", function(d) {
 //       var textHeight = this.getBBox().height;
-//       var barHeight = Math.abs(yScale(d.y0) - yScale(d.y1));
+//       var $this = d3.select(this);
+//       var barHeight = 0;
 
-//       if (textHeight + valueGap * 2 > barHeight) {
-//         d3.select(this).classed("hidden", true);
+//       if (d[valueColumn] < 0) {
+//         barHeight = yScale(d[valueColumn]) - yScale(0);
+
+//         if (textHeight + valueGap * 2 < barHeight) {
+//           $this.classed("in", true);
+//           return -(textHeight - valueGap / 2);
+//         } else {
+//           $this.classed("out", true);
+//           return textHeight + valueGap;
+//         }
+//       } else {
+//         barHeight = yScale(0) - yScale(d[valueColumn]);
+
+//         if (textHeight + valueGap * 2 < barHeight) {
+//           $this.classed("in testtwo", true);
+//           return textHeight + valueGap - 30;
+//         } else {
+//           $this.classed("out testtwo", true);
+//           return -((textHeight - 10) - valueGap / 2);
+//         }
 //       }
-
-//       var barCenter = yScale(d.y1) + (yScale(d.y0) - yScale(d.y1)) / 2;
-
-//       return barCenter + textHeight / 2;
 //     })
 //     .attr("text-anchor", "middle");
 
 };
 
-// Initially load the graphic
-//(NB: Use window.load to ensure all images have loaded)
+//Initially load the graphic
 window.onload = onWindowLoaded;
