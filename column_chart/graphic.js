@@ -67,7 +67,7 @@ var renderColumnChart = function(config) {
   var margins = {
     top: 5,
     right: 5,
-    bottom: 20,
+    bottom: 30,
     left: 30
   };
 
@@ -90,10 +90,16 @@ var renderColumnChart = function(config) {
     .append("div")
     .attr("class", "graphic-wrapper");
 
+  //Add CSS styles inline for the SVG so that they get exported within the SVG file
+  $.get("./graphic.css", function(cssContent){
+    d3.select(".graphic-wrapper svg g").append("defs").append("style").text(cssContent);
+  });
+
   var chartElement = chartWrapper
     .append("svg")
     .attr("width", chartWidth + margins.left + margins.right)
     .attr("height", chartHeight + margins.top + margins.bottom)
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
     .append("g")
     .attr("transform", `translate(${margins.left},${margins.top})`);
 
@@ -102,7 +108,7 @@ var renderColumnChart = function(config) {
     .scaleBand()
     .range([0, chartWidth])
     .round(true)
-    .padding(0.1)
+    .padding(0.3)
     .domain(
       config.data.map(d => d[labelColumn])
     );
@@ -132,6 +138,7 @@ var renderColumnChart = function(config) {
   var xAxis = d3
     .axisBottom()
     .scale(xScale)
+    .tickSize(0)
     .tickFormat(function(d, i) {
       return d;
     });
@@ -143,30 +150,31 @@ var renderColumnChart = function(config) {
     .tickFormat(d => fmtComma(d));
 
   // Render axes to chart.
+  // CQRC Styles: we do not want the grid and axis for < 5 columns chart.
   chartElement
     .append("g")
     .attr("class", "x axis")
-    .attr("transform", makeTranslate(0, chartHeight))
+    .attr("transform", makeTranslate(0, chartHeight + 10))
     .call(xAxis);
 
-  chartElement
-    .append("g")
-    .attr("class", "y axis")
-    .call(yAxis);
+  // chartElement
+  //   .append("g")
+  //   .attr("class", "y axis")
+  //   .call(yAxis);
 
   // Render grid to chart.
-  var yAxisGrid = function() {
-    return yAxis;
-  };
+  // var yAxisGrid = function() {
+  //   return yAxis;
+  // };
 
-  chartElement
-    .append("g")
-    .attr("class", "y grid")
-    .call(
-      yAxisGrid()
-        .tickSize(-chartWidth, 0)
-        .tickFormat("")
-    );
+  // chartElement
+  //   .append("g")
+  //   .attr("class", "y grid")
+  //   .call(
+  //     yAxisGrid()
+  //       .tickSize(-chartWidth, 0)
+  //       .tickFormat("")
+  //   );
 
   // Render bars to chart.
   chartElement
@@ -206,7 +214,8 @@ var renderColumnChart = function(config) {
     .data(config.data)
     .enter()
     .append("text")
-    .text(d => d[valueColumn].toFixed(0))
+    //add label units (prefix - sufix) in the line below and they are all the same.
+    .text(d => '$' + d[valueColumn].toFixed(0) + ' M')
     .attr("x", d => xScale(d[labelColumn]) + xScale.bandwidth() / 2)
     .attr("y", d => yScale(d[valueColumn]))
     .attr("dy", function(d) {
@@ -229,10 +238,10 @@ var renderColumnChart = function(config) {
 
         if (textHeight + valueGap * 2 < barHeight) {
           $this.classed("in", true);
-          return textHeight + valueGap;
+          return textHeight + valueGap - 30;
         } else {
           $this.classed("out", true);
-          return -(textHeight - valueGap / 2);
+          return -((textHeight) - valueGap / 2);
         }
       }
     })

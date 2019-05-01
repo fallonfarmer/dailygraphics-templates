@@ -20,3 +20,8 @@ pym.then(child => {
 
     window.addEventListener("resize", () => child.sendHeight());
 });
+
+//Add CSS styles inline for the SVG so that they get exported within the SVG file
+$.get("./graphic.css", function(cssContent){
+d3.select(".graphic-wrapper svg g").append("defs").append("style").text(cssContent);
+});

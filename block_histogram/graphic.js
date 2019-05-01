@@ -2,17 +2,18 @@ var pym = require("./lib/pym");
 var ANALYTICS = require("./lib/analytics");
 require("./lib/webfonts");
 var { isMobile } = require("./lib/breakpoints");
+var { COLORS, classify, makeTranslate } = require("./lib/helpers");
 
 // Global config
 var COLOR_BINS = [-4, -2, 0, 2, 4, 6, 8, 10];
 var COLOR_RANGE = [
-  "#e68c31",
-  "#eba934",
-  "#efc637",
-  "#c6b550",
-  "#99a363",
-  "#6a9171",
-  "#17807e"
+  COLORS.rchighlightdark,
+  COLORS.rchighlight3,
+  COLORS.jademultimediamain,
+  COLORS.grassdark,
+  COLORS.grass3,
+  COLORS.grass2,
+  COLORS.graydark
 ];
 
 // Global vars
@@ -63,7 +64,7 @@ var formatData = function() {
       var state = d.usps;
 
       for (var i = 0; i < numBins; i++) {
-        if (amt >= COLOR_BINS[i] && amt < COLOR_BINS[i + 1]) {
+        if (d.amt >= COLOR_BINS[i] && d.amt < COLOR_BINS[i + 1]) {
           binnedData[i].unshift(state);
           break;
         }
@@ -106,8 +107,8 @@ var renderBlockHistogram = function(config) {
 
   var margins = {
     top: 20,
-    right: 12,
-    bottom: 20,
+    right: 15,
+    bottom: 30,
     left: 10
   };
 
@@ -132,10 +133,16 @@ var renderBlockHistogram = function(config) {
     .append("div")
     .attr("class", "graphic-wrapper");
 
+  //Add CSS styles inline for the SVG so that they get exported within the SVG file
+  $.get("./graphic.css", function(cssContent){
+    d3.select(".graphic-wrapper svg g").append("defs").append("style").text(cssContent);
+  });
+
   var chartElement = chartWrapper
     .append("svg")
     .attr("width", chartWidth + margins.left + margins.right)
     .attr("height", chartHeight + margins.top + margins.bottom)
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
     .append("g")
     .attr("transform", makeTranslate(margins.left, margins.top));
 
