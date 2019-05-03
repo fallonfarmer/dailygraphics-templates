@@ -71,7 +71,7 @@ var renderColumnChart = function(config) {
     left: 50
   };
 
-  var ticksY = 4;
+  // var ticksY = 4;
   var roundTicksFactor = 50;
 
   // Calculate actual chart dimensions
@@ -142,11 +142,19 @@ var renderColumnChart = function(config) {
       return d;
     });
 
+  //First axis number to appear different than the other numbers, see below.
+  var nbTicks = 4;
   var yAxis = d3
     .axisLeft()
     .scale(yScale)
-    .ticks(ticksY)
-    .tickFormat(d => fmtComma(d));
+    .ticks(nbTicks)
+    .tickFormat(function(d, i){
+      if(i == nbTicks) {
+        return '$' + fmtComma(d);
+      } else{
+        return fmtComma(d);
+      } 
+    });
 
   // Render axes to chart.
   chartElement

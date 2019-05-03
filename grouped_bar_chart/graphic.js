@@ -288,7 +288,9 @@ var renderGroupedBarChart = function(config) {
         v = "<1";
       }
 
-      return v + "%";
+      //add measure like % or $ or M in the below line like: + "%"
+      //it will appear for all the values except the first one.
+      return v;
     })
     .attr("x", d => xScale(d[valueColumn]))
     .attr("y", (d, i) => (i ? barHeight * i + barGapInner : 0))
@@ -319,6 +321,11 @@ var renderGroupedBarChart = function(config) {
       }
     })
     .attr("dy", barHeight / 2 + 4);
+
+    //First bar label/value text is different, we add $ and/or M only to first one.
+    d3.select('g.bars:nth-of-type(1) .value text:nth-of-type(1)')
+        .text(function(d) {
+            return d[valueColumn].toFixed(0) + '%';
 };
 
 /*
