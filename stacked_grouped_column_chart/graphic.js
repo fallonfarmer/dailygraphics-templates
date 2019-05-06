@@ -98,7 +98,7 @@ var renderGroupedStackedColumnChart = function(config) {
     top: 5,
     right: 1,
     bottom: 50,
-    left: 40
+    left: 45
   };
 
   var ticksY = 5;
@@ -195,10 +195,23 @@ var renderGroupedStackedColumnChart = function(config) {
     .scale(xScale)
     .tickFormat(d => d);
 
-  var yAxis = d3.axisLeft()
+  // var yAxis = d3.axisLeft()
+  //   .scale(yScale)
+  //   .ticks(ticksY)
+  //   .tickFormat(d => d);
+
+  //First axis number to appear different than the other numbers, see below.
+  var yAxis = d3
+    .axisLeft()
     .scale(yScale)
     .ticks(ticksY)
-    .tickFormat(d => d);
+    .tickFormat(function(d, i){
+      if(i == ticksY) {
+        return d + '%';
+      } else{
+        return d;
+      } 
+    });
 
   // Render axes to chart.
   chartElement
