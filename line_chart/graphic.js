@@ -92,9 +92,9 @@ var renderLineChart = function(config) {
 
   var margins = {
     top: 5,
-    right: 75,
+    right: 95,
     bottom: 20,
-    left: 30
+    left: 35
   };
 
   var ticksX = 10;
@@ -214,10 +214,23 @@ var renderLineChart = function(config) {
       }
     });
 
+  // var yAxis = d3
+  //   .axisLeft()
+  //   .scale(yScale)
+  //   .ticks(ticksY);
+
+  //First axis number to appear different than the other numbers, see below.
   var yAxis = d3
     .axisLeft()
     .scale(yScale)
-    .ticks(ticksY);
+    .ticks(ticksY)
+    .tickFormat(function(d, i){
+      if(i == ticksY) {
+        return d + '%';
+      } else{
+        return d;
+      } 
+    });
 
   // Render axes to chart.
 
@@ -312,6 +325,22 @@ var renderLineChart = function(config) {
 
       return label;
     });
+
+    //First bar label/value text is different, we add $ and/or M only to first one.
+    //Change the number within nth-of-type(3) depending on which value you want to see the prefix or suffix unit.
+    d3.select('.value text:nth-of-type(3)')
+      .text(function(d) {
+      var item = lastItem(d);
+      var value = item[valueColumn];
+      var label = value.toFixed(1);
+      if (!isMobile.matches) {
+        return label = d.name + ": " + label + '%';
+      } else{
+        return label + '%';
+      }
+    });
+
+
 };
 
 //Initially load the graphic
