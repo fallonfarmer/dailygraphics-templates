@@ -100,7 +100,7 @@ var renderStackedColumnChart = function(config) {
     left: 50
   };
 
-  var ticksY = 5;
+  // var ticksY = 5;
   var roundTicksFactor = 50;
 
   if (isMobile.matches) {
@@ -196,11 +196,26 @@ var renderStackedColumnChart = function(config) {
     // .tickSize('0')
     .tickFormat(d => d);
 
+  // var yAxis = d3
+  //   .axisLeft()
+  //   .scale(yScale)
+  //   .ticks(ticksY)
+  //   .tickFormat(d => d);
+
+  //First axis number to appear different than the other numbers, see below.
+  //Sometimes you may have to change the number of the var ticksY.
+  var ticksY = 6;
   var yAxis = d3
     .axisLeft()
     .scale(yScale)
     .ticks(ticksY)
-    .tickFormat(d => d);
+    .tickFormat(function(d, i){
+      if(i == ticksY) {
+        return '$' + d;
+      } else{
+        return d;
+      } 
+    });
 
   // Render axes to chart.
   chartElement
