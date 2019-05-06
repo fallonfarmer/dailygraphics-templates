@@ -217,8 +217,13 @@ var renderDotChart = function(config) {
       .append("text")
       .attr("x", d => xScale(d[maxColumn]) + 6)
       .attr("y", (d, i) => i * (barHeight + barGap) + barHeight / 2 + 3)
-      .text(d => d[valueColumn].toFixed(1) + "%");
+      .text(d => d[valueColumn].toFixed(1));
   });
+
+    //First bar label/value text is different, we add $ and/or M only to first one.
+  d3.select('.value text:nth-of-type(1)')
+    .text(d => d[valueColumn].toFixed(1) + '%');
+
 };
 
 /*

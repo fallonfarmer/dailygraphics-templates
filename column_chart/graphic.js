@@ -214,8 +214,8 @@ var renderColumnChart = function(config) {
     .data(config.data)
     .enter()
     .append("text")
-    //add label units (prefix - sufix) in the line below and they are all the same.
-    .text(d => '$' + d[valueColumn].toFixed(0) + ' M')
+    //add label units (prefix - sufix) in the line below and they are for all the columns except the first one. First one is defined below.
+    .text(d => d[valueColumn].toFixed(0))
     .attr("x", d => xScale(d[labelColumn]) + xScale.bandwidth() / 2)
     .attr("y", d => yScale(d[valueColumn]))
     .attr("dy", function(d) {
@@ -246,6 +246,10 @@ var renderColumnChart = function(config) {
       }
     })
     .attr("text-anchor", "middle");
+
+    //First bar label/value text is different, we add $ and/or M only to first one.
+    d3.select('.value text:nth-of-type(1)')
+      .text(d => '$' + d[valueColumn].toFixed(0) + ' M');
 };
 
 //Initially load the graphic

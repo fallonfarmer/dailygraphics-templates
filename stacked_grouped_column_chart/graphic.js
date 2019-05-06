@@ -98,7 +98,7 @@ var renderGroupedStackedColumnChart = function(config) {
     top: 5,
     right: 1,
     bottom: 50,
-    left: 30
+    left: 40
   };
 
   var ticksY = 5;
@@ -156,7 +156,7 @@ var renderGroupedStackedColumnChart = function(config) {
         }
       })
     )
-    .range(["#787878", COLORS.blue3, "#ccc"]);
+    .range([COLORS.graydark, COLORS.turquoisemain, COLORS.gray2]);
 
   // Render the legend.
   var legend = containerElement
