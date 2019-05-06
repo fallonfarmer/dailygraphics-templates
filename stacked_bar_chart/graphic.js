@@ -230,7 +230,7 @@ var renderStackedBarChart = function(config) {
     .data(d => d.values)
     .enter()
     .append("text")
-    .text(d => (d.val ? d.val + "%" : null))
+    .text(d => (d.val ? d.val : null))
     .attr("class", d => classify(d.name))
     .attr("x", d => xScale(d.x1))
     .attr("dx", function(d) {
@@ -249,6 +249,10 @@ var renderStackedBarChart = function(config) {
       return -(valueGap + textWidth);
     })
     .attr("dy", barHeight / 2 + 4);
+
+    //First bar label/value text is different, we add $ and/or M only to first one.
+    d3.select('.value text:nth-of-type(1)')
+      .text(d => d.val + '%');
 
   // Render 0-line.
   if (min < 0) {

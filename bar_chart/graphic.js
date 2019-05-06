@@ -216,7 +216,7 @@ var renderBarChart = function(config) {
     .data(config.data)
     .enter()
     .append("text")
-    .text(d => d[valueColumn].toFixed(0) + "%")
+    .text(d => d[valueColumn].toFixed(0))
     .attr("x", d => xScale(d[valueColumn]))
     .attr("y", (d, i) => i * (barHeight + barGap))
     .attr("dx", function(d) {
@@ -246,6 +246,11 @@ var renderBarChart = function(config) {
       }
     })
     .attr("dy", barHeight / 2 + 3);
+
+    //First bar label/value text is different, we add $ and/or M only to first one.
+    d3.select('.value text:nth-of-type(1)')
+      .text(d => d[valueColumn].toFixed(0) + '%')
+      .attr("x", d => xScale(d[valueColumn]) - 10);
 };
 
 // Initially load the graphic
