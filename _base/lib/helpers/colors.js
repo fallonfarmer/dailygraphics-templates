@@ -19,5 +19,5 @@ module.exports = {
   "turquoisemain": "#0E869A", "turquoise1": "#D9EDF1", "turquoise2": "#A6D5DB", "turquoise3": "#4DABB6", "turquoisedark": "#036574", 
   "grassmain": "#459C59", "grass1": "#E5F1E7", "grass2": "#C2DDC8", "grass3": "#85BC91", "grassdark": "#2E7742", 
   "lipstickmain": "#C73D49", "lipstick1": "#F6E2E4", "lipstick2": "#E9BABF", "lipstick3": "#D4757F", "lipstickdark": "#942A33", 
-  "gridlinesgridlines": "#A1A1A1", "baselinesbaselines": "#5B5B5B"
+  "gridlines": "#A1A1A1", "baselines": "#5B5B5B"
 };
