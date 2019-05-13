@@ -159,10 +159,7 @@ var renderStackedBarChart = function(config) {
     .append("div")
     .attr("class", "graphic-wrapper");
 
-  //Add CSS styles inline for the SVG so that they get exported within the SVG file
-  $.get("./graphic.css", function(cssContent){
-    d3.select(".graphic-wrapper svg g").append("defs").append("style").text(cssContent);
-  });
+  
 
   var chartElement = chartWrapper
     .append("svg")
