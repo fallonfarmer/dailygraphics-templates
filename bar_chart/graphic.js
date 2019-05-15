@@ -2,11 +2,18 @@
 var pym = require("./lib/pym");
 var ANALYTICS = require("./lib/analytics");
 require("./lib/webfonts");
-var { isMobile } = require("./lib/breakpoints");
+var {
+  isMobile
+} = require("./lib/breakpoints");
 
 var pymChild;
 
-var { COLORS, makeTranslate, classify, formatStyle } = require("./lib/helpers");
+var {
+  COLORS,
+  makeTranslate,
+  classify,
+  formatStyle
+} = require("./lib/helpers");
 
 var d3 = {
   ...require("d3-axis/dist/d3-axis.min"),
@@ -15,7 +22,7 @@ var d3 = {
 };
 
 // Initialize the graphic.
-var onWindowLoaded = function() {
+var onWindowLoaded = function () {
   render();
 
   window.addEventListener("resize", render);
@@ -24,10 +31,10 @@ var onWindowLoaded = function() {
     pymChild = child;
     child.sendHeight();
 
-    pymChild.onMessage("on-screen", function(bucket) {
+    pymChild.onMessage("on-screen", function (bucket) {
       ANALYTICS.trackEvent("on-screen", bucket);
     });
-    pymChild.onMessage("scroll-depth", function(data) {
+    pymChild.onMessage("scroll-depth", function (data) {
       data = JSON.parse(data);
       ANALYTICS.trackEvent("scroll-depth", data.percent, data.seconds);
     });
@@ -35,7 +42,7 @@ var onWindowLoaded = function() {
 };
 
 // Render the graphic(s). Called by pym with the container width.
-var render = function() {
+var render = function () {
   // Render the chart!
   var container = "#bar-chart";
   var element = document.querySelector(container);
@@ -53,7 +60,7 @@ var render = function() {
 };
 
 // Render a bar chart.
-var renderBarChart = function(config) {
+var renderBarChart = function (config) {
   // Setup
   var labelColumn = "label";
   var valueColumn = "amt";
@@ -87,7 +94,7 @@ var renderBarChart = function(config) {
     .append("div")
     .attr("class", "graphic-wrapper");
 
-  
+
 
   var chartElement = chartWrapper
     .append("svg")
@@ -124,7 +131,7 @@ var renderBarChart = function(config) {
     .axisBottom()
     .scale(xScale)
     .ticks(ticksX)
-    .tickFormat(function(d) {
+    .tickFormat(function (d) {
       return d.toFixed(0) + "%";
     });
 
@@ -191,7 +198,7 @@ var renderBarChart = function(config) {
     .data(config.data)
     .enter()
     .append("li")
-    .attr("style", function(d, i) {
+    .attr("style", function (d, i) {
       return formatStyle({
         width: labelWidth + "px",
         height: barHeight + "px",
@@ -199,7 +206,7 @@ var renderBarChart = function(config) {
         top: i * (barHeight + barGap) + "px"
       });
     })
-    .attr("class", function(d) {
+    .attr("class", function (d) {
       return classify(d[labelColumn]);
     })
     .append("span")
@@ -213,10 +220,17 @@ var renderBarChart = function(config) {
     .data(config.data)
     .enter()
     .append("text")
-    .text(d => d[valueColumn].toFixed(0))
+    .text(function (d, i) {
+      if (i == 0) {
+        return d[valueColumn].toFixed(0) + "%"
+      } else {
+
+        return d[valueColumn].toFixed(0)
+      }
+    })
     .attr("x", d => xScale(d[valueColumn]))
     .attr("y", (d, i) => i * (barHeight + barGap))
-    .attr("dx", function(d) {
+    .attr("dx", function (d) {
       var xStart = xScale(d[valueColumn]);
       var textWidth = this.getComputedTextLength();
 
@@ -244,10 +258,6 @@ var renderBarChart = function(config) {
     })
     .attr("dy", barHeight / 2 + 3);
 
-    //First bar label/value text is different, we add $ and/or M only to first one.
-    d3.select('.value text:nth-of-type(1)')
-      .text(d => d[valueColumn].toFixed(0) + '%')
-      .attr("x", d => xScale(d[valueColumn]) - 10);
 };
 
 // Initially load the graphic
