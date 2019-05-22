@@ -122,46 +122,32 @@
 @gridlines           : #A1A1A1;
 @baselines           : #5B5B5B;
 
-// Fonts
-// .gotham() {
-//   font-family: 'Gotham SSm',Helvetica,Arial,sans-serif;
-//   font-weight: normal;
-//   font-weight: 400;
-// }
-
-// // Normal Knockout
-// .knockout() {
-//   font-family: 'Knockout 31 4r','Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-//   font-weight: normal;
-// }
-
-// // Knockout, uppercased
-// .knockout-upper() {
-//   .knockout();
-//   text-transform: uppercase;
-// }
-
-// // Knockout for headings
-// .knockout-header() {
-//   .knockout-upper();
-//   letter-spacing: 0.05em;
-//   -webkit-font-smoothing: antialiased;
-// }
-
-// .sans-serif() {
-//   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-// }
-
 //CQRC FONTS
+@font-face {
+  font-family: GothamNarrow-Book;
+  src: url(https://cdn.media.rollcall.com/files/webpack/0.28.41/client/_/public/stylesheets/resources/GothamNarrow-Book.otf) format("opentype")
+}
+
+@font-face {
+  font-family: GothamNarrow-Bold;
+  src: url(https://cdn.media.rollcall.com/files/webpack/0.28.41/client/_/public/stylesheets/resources/GothamNarrow-Bold.otf) format("opentype")
+}
+@font-face {
+  font-family: GothamNarrow-Medium;
+  src: url(https://cdn.media.rollcall.com/files/webpack/0.28.41/client/_/public/stylesheets/resources/GothamNarrow-Medium.otf) format("opentype")
+}
+
 .gotham-narrow-book() {
   font-family: 'GothamNarrow-Book', 'Helvetica', 'Arial', sans-serif;
   font-weight: normal;
-  font-weight: 400;
 }
 .gotham-narrow-bold() {
   font-family: 'GothamNarrow-Bold', 'Helvetica', 'Arial', sans-serif;
   font-weight: normal;
-  font-weight: 400;
+}
+.gotham-narrow-medium() {
+  font-family: 'GothamNarrow-Medium', 'Helvetica', 'Arial', sans-serif;
+  font-weight: normal;
 }
 
 // Mixins
