@@ -1,7 +1,8 @@
 {
   "templateSheet": "1GxcAvdeBIhWHaOYtyTymVjGLOAEve0mGA3oZRignVzA",
   "files": [
-    "index.html",
+    "*.html",
+    "!_*.html",
     "graphic.js",
     "graphic.less",
     "*.png",
