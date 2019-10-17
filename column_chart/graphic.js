@@ -68,7 +68,7 @@ var renderColumnChart = function(config) {
     top: 5,
     right: 5,
     bottom: 30,
-    left: 30
+    left: 5
   };
 
   var ticksY = 4;
@@ -148,6 +148,7 @@ var renderColumnChart = function(config) {
 
   // Render axes to chart.
   // CQRC Styles: we do not want the grid and axis for < 5 columns chart.
+  // uncomment lines 158-159 to create axis -- also change stroke to none in graphic.less
   chartElement
     .append("g")
     .attr("class", "x axis")
@@ -204,6 +205,7 @@ var renderColumnChart = function(config) {
   }
 
   // Render bar values.
+  // comment out lines 209 - 210 to remove unit labels
   chartElement
     .append("g")
     .attr("class", "value")
@@ -235,10 +237,10 @@ var renderColumnChart = function(config) {
 
         if (textHeight + valueGap * 2 < barHeight) {
           $this.classed("in", true);
-          return textHeight + valueGap - 30;
+          return textHeight + valueGap;
         } else {
           $this.classed("out", true);
-          return -((textHeight) - valueGap / 2);
+          return -(textHeight - valueGap / 2);
         }
       }
     })
