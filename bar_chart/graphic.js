@@ -67,9 +67,9 @@ var renderBarChart = function (config) {
 
   var barHeight = 25;
   var barGap = 10;
-  var labelWidth = 85;
+  var labelWidth = 100;
   var labelMargin = 6;
-  var valueGap = 6;
+  var valueGap = 5;
 
   var margins = {
     top: 0,
@@ -94,13 +94,10 @@ var renderBarChart = function (config) {
     .append("div")
     .attr("class", "graphic-wrapper");
 
-
-
   var chartElement = chartWrapper
     .append("svg")
     .attr("width", chartWidth + margins.left + margins.right)
     .attr("height", chartHeight + margins.top + margins.bottom)
-    .attr('xmlns', 'http://www.w3.org/2000/svg')
     .append("g")
     .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
 
@@ -132,7 +129,7 @@ var renderBarChart = function (config) {
     .scale(xScale)
     .ticks(ticksX)
     .tickFormat(function (d) {
-      return d.toFixed(0) + "%";
+      return d.toFixed(0) + "%"; //change % for unit of your choice
     });
 
   // Render axes to chart.
@@ -221,11 +218,11 @@ var renderBarChart = function (config) {
     .enter()
     .append("text")
     .text(function (d, i) {
-      if (i == 0) {
-        return d[valueColumn].toFixed(0) + "%"
+      if (i == 0) { 
+        return "$" + d[valueColumn].toFixed(0) + " trillion" //use this line to create labels on the first unit
       } else {
 
-        return d[valueColumn].toFixed(0)
+        return d[valueColumn].toFixed(0) //use the .toFixed() function to specify decimals
       }
     })
     .attr("x", d => xScale(d[valueColumn]))
@@ -249,14 +246,14 @@ var renderBarChart = function (config) {
       } else {
         if (xStart + valueGap + textWidth > chartWidth) {
           d3.select(this).classed("in", true);
-          return -(valueGap + textWidth);
+          return - (valueGap + textWidth);
         } else {
           d3.select(this).classed("out", true);
           return valueGap;
         }
       }
     })
-    .attr("dy", barHeight / 2 + 3);
+    .attr("dy", barHeight / 1.5); //the number here controls the alignment of the value inside the chart
 
 };
 
