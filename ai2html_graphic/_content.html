@@ -22,6 +22,11 @@
 <% } %>
 
 <div class="footer">
-  <% if (COPY.labels.source) { %><p><%= COPY.labels.source %></p><% } %>
-  <% if (COPY.labels.credit) { %><p> <%= COPY.labels.credit %></p><% } %>
+  <% if (COPY.labels.source) { %>
+  <p><%= "Source: " + COPY.labels.source %></p>
+  <% } %>
+  
+  <% if (COPY.labels.credit) { %>
+  <p><%= COPY.labels.credit + "/CQ Roll Call" %></p>
+  <% } %>
 </div>
