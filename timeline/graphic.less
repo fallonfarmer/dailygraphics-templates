@@ -1,0 +1,197 @@
+@import "./lib/base";
+
+tr,
+th,
+td {
+  display: block;
+  white-space: normal;
+  padding: 0px;
+}
+
+
+
+// Base table styles
+table {
+  border-collapse: collapse;
+  padding: 0px;
+  width: 100%;
+  font-size: 14px;
+  color: #666;
+
+  tr.shadedrow {
+    background-color: #f1f1f1;
+    color: #333;
+    font-weight: bold;
+  }
+
+  th {
+    display: inline-block;
+    .gotham-narrow-book();
+    line-height: 1.2;
+    text-align: left;
+    vertical-align: bottom;
+  }
+
+  td {
+    vertical-align: middle;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+
+// Tablesorter styles
+table {
+  th {
+    &.sort-header {
+      cursor: pointer;
+
+      &::-moz-selection,
+      &::selection {
+        background: transparent;
+      }
+
+      .sorter {
+        border-top: 2px solid #404040;
+        visibility: hidden;
+
+        .icon {
+          content: '';
+          width: 1px;
+          margin: 3px auto 7px auto;
+          border-width: 0 4px 4px;
+          border-style: solid;
+          border-color: #404040 transparent;
+        }
+      }
+
+      &:hover .sorter {
+        visibility: visible;
+      }
+    }
+
+    &[aria-sort="descending"] .sorter,
+    &[aria-sort="ascending"] .sorter,
+    &[aria-sort="ascending"]:hover .sorter {
+      visibility: visible;
+      opacity: 0.4;
+    }
+
+    &[aria-sort="descending"] .sorter .icon {
+      border-bottom: none;
+      border-width: 4px 4px 0;
+    }
+  }
+}
+
+/*
+* larger-than-small-screen styles
+* ~ defining some desktop-only styles here to avoid
+* ~ writing extra mobile styles to undo them.
+*/
+@media @screen-mobile-above {
+  tbody {
+    display: inline-block;
+    max-height: 600px;
+    overflow: auto;
+  }
+
+  thead {
+    display: inline-block;
+  }
+
+  table {
+
+    th,
+    td {
+      padding: 5px;
+
+      // comment these two out if you want to highlight particular rows
+      &:first-child {
+        width: 150px;
+        .gotham-narrow-medium();
+        color: #333;
+        font-size: 14px;
+      }
+
+      &:last-child {
+        padding-right: 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      &.amt {
+        text-align: right;
+      }
+    }
+
+    tr {
+      padding: 10px 0;
+    }
+  }
+}
+
+/*
+* small-screen styles
+*/
+@media @screen-mobile {
+  tbody {
+    display: inline-block;
+    max-height: 600px;
+    overflow: auto;
+  }
+
+  thead {
+    display: inline-block;
+  }
+
+  table {
+    thead {
+      display: inline-block;
+    }
+
+    tr,
+    th,
+    td {
+      display: block;
+      padding: 0;
+      white-space: normal;
+    }
+
+    tr {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+
+      &:first-child {
+        border-top: 1px solid #eee;
+      }
+    }
+
+    td {
+      margin-bottom: 6px;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    tr td:first-child {
+      .gotham-narrow-medium();
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 6px;
+
+      &:before {
+        content: '';
+        display: none;
+      }
+    }
+
+    //removes mobile formatting from 'info'
+    //   th[data-title]:before,
+    //   td[data-title]:before {
+    //     content: attr(data-title) ":\00A0";
+    //     display: inline-block;
+    //     margin-right: 10px;
+    //     width: 70%;
+    //   }
+  }
+}

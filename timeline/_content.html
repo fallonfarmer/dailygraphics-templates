@@ -1,0 +1,40 @@
+<% if (COPY.labels.headline) { %>
+  <h1><%= t.smarty(COPY.labels.headline) %></h1>
+  <% } %>
+  
+  <% if (COPY.labels.subhed) { %>
+  <h2><%= t.smarty(COPY.labels.subhed) %></h2>
+  <% } %>
+  
+  <div class="graphic" id="table-graphic">
+    <table id="table-scroll timeline-table" role="table">
+    
+      <tbody>
+  
+        <% COPY.data.forEach(function(row) { %>
+        <tr class="row-<%= t.classify(row.date) %>" role="row">
+          <td role="cell" data-title="<%= COPY.labels.hdr_date %>"><%= row.date %></td>
+          <td role="cell" data-title="<%= COPY.labels.hdr_info %>"><%= row.info %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+  
+    </table>
+  </div>
+  
+  <% if (COPY.labels.footnote) { %>
+  <div class="footnotes">
+    <p><%= "Note: " + COPY.labels.footnote %></p>
+  </div>
+  <% } %>
+  
+  <div class="footer">
+    <% if (COPY.labels.source) { %>
+    <p><%= "Source: " + COPY.labels.source %></p>
+    <% } %>
+  
+    <% if (COPY.labels.credit) { %>
+    <p><%= COPY.labels.credit + "/CQ Roll Call" %></p>
+    <% } %>
+  </div>
+  
