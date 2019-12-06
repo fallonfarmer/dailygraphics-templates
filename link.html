@@ -1,4 +1,4 @@
-<p><em><strong> <a
-  href="https://<%= config.deployment.bucket %>/<%= config.deployment.prefix %>/<%= slug %>?mode=childlink&utm_source=CQRCnews&utm_medium=app&utm_campaign=storyredirect">
-  Don't see the graphic above? Click here.
-</a></em></strong></p>
+<%
+  if (typeof childPage == "undefined") var childPage = "";
+%>
+https://<%= config.deployment.bucket %>/<%= config.deployment.prefix %>/<%= slug %>/<%= childPage %>

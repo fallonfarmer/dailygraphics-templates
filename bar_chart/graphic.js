@@ -66,7 +66,7 @@ var renderBarChart = function (config) {
   var valueColumn = "amt";
 
   var barHeight = 25;
-  var barGap = 10;
+  var barGap = 8;
   var labelWidth = 100;
   var labelMargin = 6;
   var valueGap = 5;
