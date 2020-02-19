@@ -1,4 +1,6 @@
 module.exports = {
+  "fnEarth": "#826f75",
+  "fnTeal": "#008991",
   "red1": "#FFD000", "red2": "#A23520", "red3": "#D8472B", "red4": "#E27560", "red5": "#ECA395", "red6": "#F5D1CA",
   "orange1": "#714616", "orange2": "#AA6A21", "orange3": "#E38D2C", "orange4": "#EAAA61", "orange5": "#F1C696", "orange6": "#F8E2CA",
   "yellow1": "#77631B", "yellow2": "#B39429", "yellow3": "#EFC637", "yellow4": "#F3D469", "yellow5": "#F7E39B", "yellow6": "#FBF1CD",
@@ -19,5 +21,6 @@ module.exports = {
   "turquoisemain": "#0E869A", "turquoise1": "#D9EDF1", "turquoise2": "#A6D5DB", "turquoise3": "#4DABB6", "turquoisedark": "#036574", 
   "grassmain": "#459C59", "grass1": "#E5F1E7", "grass2": "#C2DDC8", "grass3": "#85BC91", "grassdark": "#2E7742", 
   "lipstickmain": "#C73D49", "lipstick1": "#F6E2E4", "lipstick2": "#E9BABF", "lipstick3": "#D4757F", "lipstickdark": "#942A33", 
-  "gridlines": "#A1A1A1", "baselines": "#5B5B5B"
+  "gridlines": "#A1A1A1", "baselines": "#5B5B5B",
+  "graylabels": "#444446"
 };
