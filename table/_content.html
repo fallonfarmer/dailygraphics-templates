@@ -48,11 +48,18 @@
 <% } %>
 
 <div class="footer">
-  <% if (COPY.labels.source) { %>
-  <p><%= "Source: " + COPY.labels.source %></p>
-  <% } %>
-  
-  <% if (COPY.labels.credit) { %>
-  <p><%= COPY.labels.credit + "/CQ Roll Call" %></p>
-  <% } %>
+  <div class="row">
+    <div class="col-6">
+      <% if (COPY.labels.source) { %>
+      <p><%= "Source: " + COPY.labels.source %></p>
+      <% } %>
+
+      <% if (COPY.labels.credit) { %>
+      <p><%= COPY.labels.credit + "/FiscalNote" %></p>
+      <% } %>
+    </div>
+    <div id="credit-logo" class="col-6">
+      <img src="img/logo-deeppurple-firered.png" alt="FiscalNote logo">
+    </div>
+  </div>
 </div>

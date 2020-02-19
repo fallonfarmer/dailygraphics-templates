@@ -183,7 +183,7 @@ html { -webkit-text-size-adjust: none; }
 
 body {
   margin: 0;
-  padding: 33px 0;
+  padding: 33px;
   //font: 14px/1.4 Helvetica, Arial, sans-serif;
   font-family: 'GothamNarrow-Book', 'Helvetica', 'Arial', sans-serif;
   color: #231F20;
@@ -256,6 +256,22 @@ h3 {
 .footer p { font-style: normal; }
 .footer p em { font-style: normal; }
 .footnotes p strong { color: #231F20; }
+
+.footer #credit-logo {
+  align-self: center;
+  text-align: right;
+  height: 20px;
+  img {
+    max-height: 100%;
+  }
+}
+
+.row {
+  display: flex;
+}
+.col-6 {
+  width: 50%;
+}
 
 a, a:link, a:visited {
   color: #4774CC;
@@ -436,4 +452,8 @@ img:not([alt]) {
   clip: inset(0, 0, 0, 0);
   width: 1px;
   height: 1px;
+}
+
+#blockColorblindContent {
+    display: none;
 }
