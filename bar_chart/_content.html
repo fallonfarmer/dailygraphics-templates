@@ -22,18 +22,21 @@
 
 <div class="footer">
   <div class="row">
-    <div class="col-6">
+    <div class="col<% if (COPY.labels.logo) { %>-6<% } %>">
       <% if (COPY.labels.source) { %>
       <p><%= "Source: " + COPY.labels.source %></p>
       <% } %>
 
       <% if (COPY.labels.credit) { %>
-      <p><%= COPY.labels.credit + "/FiscalNote" %></p>
+      <p><%= COPY.labels.credit + "/" + COPY.labels.credit_company %></p>
       <% } %>
     </div>
+
+    <% if (COPY.labels.logo) { %>
     <div id="credit-logo" class="col-6">
-      <img src="img/logo-deeppurple-firered.png" alt="FiscalNote logo">
+      <img src="img/<%- COPY.labels.logo %>" alt="<%- COPY.labels.logo_alt %>">
     </div>
+    <% } %>
   </div>
 </div>
 
